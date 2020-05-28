@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { users } = require('./users');
 
 /**
@@ -17,9 +18,9 @@ module.exports.signUp = async (req, res) => {
         res.status(400).json({ message: `Password is not provided` });
     }
 
-    const result = users.findIndex((user) => user.email === email);
+    const userExists = users.find((user) => user.email === email);
 
-    if (result !== -1) {
+    if (userExists) {
         res.status(403).json({ message: `User already exists!` });
     }
 
@@ -60,7 +61,7 @@ module.exports.login = async (req, res, next) => {
             return res.status(401).json({ message: 'Auth failed' });
         }
 
-        const token = jwt.sign({ email: user.email, userId: user._id }, 'secret', {
+        const token = jwt.sign({ email: user.email, userId: user.id }, 'secret', {
             expiresIn: '1h',
         });
 
