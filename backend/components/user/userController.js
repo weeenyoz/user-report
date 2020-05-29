@@ -46,7 +46,7 @@ module.exports.signUp = async (req, res) => {
  * /api/user/login
  */
 module.exports.login = async (req, res, next) => {
-    const { email, password, isAdmin } = req.body;
+    const { email, password } = req.body;
 
     try {
         const user = users.find((user) => user.email === email);
@@ -62,8 +62,8 @@ module.exports.login = async (req, res, next) => {
         }
 
         const token = jwt.sign(
-            { email: user.email, userId: user.id, isAdmin },
-            'secret',
+            { email: user.email, userId: user.id, isAdmin: user.isAdmin },
+            process.env.TOKEN_SECRET,
             {
                 expiresIn: '1h',
             },
