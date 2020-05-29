@@ -1,4 +1,5 @@
-<app-header></app-header>
+<app-header [isLoggedIn]="isLoggedIn"></app-header>
 <main>
+  <app-toast [isSignedUp]="isSignedUp" [message]="message"></app-toast>
   <router-outlet></router-outlet>
 </main>
