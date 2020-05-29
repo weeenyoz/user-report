@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { AuthData } from './user.model';
+import { LoginResponse } from './auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private token: string;
+    private token = '';
 
     constructor(private httpClient: HttpClient) {}
 
@@ -22,7 +23,7 @@ export class AuthService {
 
     login(authData: AuthData) {
         this.httpClient
-            .post<{ token: string }>('api/user/login', { ...authData })
+            .post<LoginResponse>('api/user/login', { ...authData })
             .subscribe(
                 (res) => {
                     this.token = res.token;
