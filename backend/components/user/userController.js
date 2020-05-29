@@ -65,7 +65,7 @@ module.exports.login = async (req, res, next) => {
             expiresIn: '1h',
         });
 
-        res.status(200).json({ token });
+        res.status(200).json({ token, expiresIn: 36000 });
     } catch (error) {
         return res.status(401).json({ message: 'Auth failed' });
     }
