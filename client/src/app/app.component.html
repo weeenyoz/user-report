@@ -1,6 +1,6 @@
 <app-header [isLoggedIn]="isLoggedIn"></app-header>
 <main>
-  <app-notification [isSignedUp]="isSignedUp" [isSignUpFailed]="isSignUpFailed" [message]="message">
+  <app-notification [isSuccess]="isSuccess" [isError]="isError" [message]="message">
   </app-notification>
   <router-outlet></router-outlet>
 </main>

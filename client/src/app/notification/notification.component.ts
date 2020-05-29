@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./notification.component.scss'],
 })
 export class Notification {
-    @Input('isSignedUp') isSignedUp: boolean;
-    @Input('isSignUpFailed') isSignUpFailed: boolean;
+    @Input('isSuccess') isSuccess: boolean;
+    @Input('isError') isError: boolean;
     @Input('message') message: string;
 }

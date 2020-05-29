@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from './auth/auth.service';
@@ -14,8 +14,8 @@ export class AppComponent {
     isSignedUpListenerSubs: Subscription;
 
     @Output('isLoggedIn') isLoggedIn: boolean;
-    @Output('isSignedUp') isSignedUp: boolean;
-    @Output('isSignUpFailed') isSignUpFailed: boolean;
+    @Output('isSuccess') isSuccess: boolean;
+    @Output('isError') isError: boolean;
     @Output('message') message: string;
 
     constructor(private authService: AuthService) {}
@@ -23,14 +23,21 @@ export class AppComponent {
     ngOnInit() {
         this.isLoggedInListenerSubs = this.authService
             .getIsLoggedInStatusListener()
-            .subscribe((isAuthenticated) => (this.isLoggedIn = isAuthenticated));
+            .subscribe((data) => {
+                const { isLoggedIn, message } = data;
+                this.message = message && message;
+                this.isLoggedIn = isLoggedIn;
+                this.isSuccess = isLoggedIn;
+                this.isError = !isLoggedIn;
+            });
 
         this.isSignedUpListenerSubs = this.authService
             .getIsSignedUpStatusListener()
             .subscribe((data) => {
-                this.message = data.message;
-                this.isSignedUp = data.isSignedUp;
-                this.isSignUpFailed = data.isSignUpFailed;
+                const { isSignedUp, isSignUpFailed, message } = data;
+                this.message = message;
+                this.isSuccess = isSignedUp;
+                this.isError = isSignUpFailed;
             });
     }
 

@@ -3,13 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { AuthData } from './user.model';
-import { LoginResponse, SignUpResponse } from './auth.model';
+import { AuthResponse, LoginResponse, SignUpResponse } from './auth.model';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private token = '';
-    private isLoggedInStatusListener = new Subject<boolean>();
+    private isLoggedInStatusListener = new Subject<LoginResponse>();
     private isSignedUpStatusListener = new Subject<SignUpResponse>();
 
     constructor(private httpClient: HttpClient, public router: Router) {}
@@ -53,14 +53,20 @@ export class AuthService {
 
     login(authData: AuthData) {
         this.httpClient
-            .post<LoginResponse>('api/user/login', { ...authData })
+            .post<AuthResponse>('api/user/login', { ...authData })
             .subscribe(
                 (res) => {
                     this.token = res.token;
-                    this.isLoggedInStatusListener.next(true);
+                    this.isLoggedInStatusListener.next({
+                        isLoggedIn: true,
+                    });
                 },
                 (error) => {
                     console.log(error);
+                    this.isLoggedInStatusListener.next({
+                        isLoggedIn: false,
+                        message: error.error.message,
+                    });
                 },
             );
     }

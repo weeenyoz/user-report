@@ -1,6 +1,11 @@
-export interface LoginResponse {
+export interface AuthResponse {
     token: string;
     expiresIn: number;
+}
+
+export interface LoginResponse {
+    isLoggedIn: boolean;
+    message?: string;
 }
 
 export interface SignUpResponse {

@@ -1,5 +1,5 @@
-<div role="alert" class="alert alert-dismissible fade show" *ngIf="isSignedUp || isSignUpFailed"
-  [ngClass]="{'alert-success': isSignedUp, 'alert-danger': isSignUpFailed}">
+<div role="alert" class="alert alert-dismissible fade show" *ngIf="message || isError"
+  [ngClass]="{'alert-success': isSuccess, 'alert-danger': isError}">
   <strong>{{message}}</strong>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
