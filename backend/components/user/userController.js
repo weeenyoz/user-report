@@ -46,7 +46,7 @@ module.exports.signUp = async (req, res) => {
  * /api/user/login
  */
 module.exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, isAdmin } = req.body;
 
     try {
         const user = users.find((user) => user.email === email);
@@ -61,9 +61,13 @@ module.exports.login = async (req, res, next) => {
             return res.status(401).json({ message: 'Auth failed' });
         }
 
-        const token = jwt.sign({ email: user.email, userId: user.id }, 'secret', {
-            expiresIn: '1h',
-        });
+        const token = jwt.sign(
+            { email: user.email, userId: user.id, isAdmin },
+            'secret',
+            {
+                expiresIn: '1h',
+            },
+        );
 
         res.status(200).json({ token, expiresIn: 36000 });
     } catch (error) {
