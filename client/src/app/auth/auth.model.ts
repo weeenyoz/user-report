@@ -5,5 +5,6 @@ export interface LoginResponse {
 
 export interface SignUpResponse {
     isSignedUp: boolean;
+    isSignUpFailed: boolean;
     message: string;
 }

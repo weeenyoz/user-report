@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { AuthData } from './user.model';
 import { LoginResponse, SignUpResponse } from './auth.model';
@@ -11,7 +12,7 @@ export class AuthService {
     private isLoggedInStatusListener = new Subject<boolean>();
     private isSignedUpStatusListener = new Subject<SignUpResponse>();
 
-    constructor(private httpClient: HttpClient) {}
+    constructor(private httpClient: HttpClient, public router: Router) {}
 
     getToken() {
         return this.token;
@@ -33,13 +34,17 @@ export class AuthService {
                     console.log('res: ', res);
                     this.isSignedUpStatusListener.next({
                         isSignedUp: true,
+                        isSignUpFailed: false,
                         message: res.message,
                     });
+
+                    this.router.navigate(['/login']);
                 },
                 (error) => {
                     console.log(error.error.message);
                     this.isSignedUpStatusListener.next({
                         isSignedUp: false,
+                        isSignUpFailed: true,
                         message: error.error.message,
                     });
                 },

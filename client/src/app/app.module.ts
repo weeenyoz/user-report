@@ -7,10 +7,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginSignupComponent } from './auth/login-signup.component';
 import { HeaderComponent } from './header/header.component';
+import { Notification } from './notification/notification.component';
 import { AuthInterceptor } from './auth/auth-interceptor';
 
 @NgModule({
-    declarations: [AppComponent, HeaderComponent, LoginSignupComponent],
+    declarations: [AppComponent, HeaderComponent, LoginSignupComponent, Notification],
     imports: [
         BrowserModule,
         AppRoutingModule,

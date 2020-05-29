@@ -15,6 +15,7 @@ export class AppComponent {
 
     @Output('isLoggedIn') isLoggedIn: boolean;
     @Output('isSignedUp') isSignedUp: boolean;
+    @Output('isSignUpFailed') isSignUpFailed: boolean;
     @Output('message') message: string;
 
     constructor(private authService: AuthService) {}
@@ -29,6 +30,7 @@ export class AppComponent {
             .subscribe((data) => {
                 this.message = data.message;
                 this.isSignedUp = data.isSignedUp;
+                this.isSignUpFailed = data.isSignUpFailed;
             });
     }
 
