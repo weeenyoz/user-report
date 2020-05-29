@@ -35,9 +35,10 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const { email, password } = form.value;
+        const { username, email, password } = form.value;
 
         let user = {
+            username,
             email,
             password,
         };

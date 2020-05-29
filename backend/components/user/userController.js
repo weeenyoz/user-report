@@ -7,15 +7,16 @@ const { users } = require('./users');
  * /api/user/signup
  */
 module.exports.signUp = async (req, res) => {
-    console.log('req.body:', req.body);
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    if (!email && !password) {
-        res.status(400).json({ message: `Email and password is not provided` });
+    if (!email && !password && !username) {
+        res.status(400).json({ message: `Email, password and username is not provided` });
     } else if (!email) {
         res.status(400).json({ message: `Email is not provided` });
     } else if (!password) {
         res.status(400).json({ message: `Password is not provided` });
+    } else if (!username) {
+        res.status(400).json({ message: `Username is not provided` });
     }
 
     const userExists = users.find((user) => user.email === email);
@@ -29,6 +30,7 @@ module.exports.signUp = async (req, res) => {
 
         const newUser = {
             id: users.length + 1,
+            username,
             email,
             password: hashedPw,
         };
@@ -37,6 +39,7 @@ module.exports.signUp = async (req, res) => {
 
         res.status(201).json({ message: 'New User created!' });
     } catch (error) {
+        console.log('error: ', error);
         res.status(500).json({ error: error });
     }
 };
@@ -52,13 +55,13 @@ module.exports.login = async (req, res, next) => {
         const user = users.find((user) => user.email === email);
 
         if (!user) {
-            return res.status(401).json({ message: 'Auth failed' });
+            return res.status(401).json({ message: 'Login failed' });
         }
 
         const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
-            return res.status(401).json({ message: 'Auth failed' });
+            return res.status(401).json({ message: 'Login failed' });
         }
 
         const token = jwt.sign(
