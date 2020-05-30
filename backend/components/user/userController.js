@@ -10,7 +10,9 @@ module.exports.signUp = async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!email && !password && !username) {
-        res.status(400).json({ message: `Email, password and username is not provided` });
+        res.status(400).json({
+            message: `Email, password and username is not provided`,
+        });
     } else if (!email) {
         res.status(400).json({ message: `Email is not provided` });
     } else if (!password) {
@@ -72,7 +74,7 @@ module.exports.login = async (req, res, next) => {
             },
         );
 
-        res.status(200).json({ token, expiresIn: 36000 });
+        res.status(200).json({ token, expiresIn: 3600 });
     } catch (error) {
         return res.status(401).json({ message: 'Auth failed' });
     }

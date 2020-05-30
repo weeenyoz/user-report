@@ -21,10 +21,15 @@ export class AppComponent {
     constructor(private authService: AuthService) {}
 
     ngOnInit() {
+        this.authService.autoAuthUser();
+
+        this.isLoggedIn = this.authService.getIsAuth();
+
         this.isLoggedInListenerSubs = this.authService
             .getIsLoggedInStatusListener()
             .subscribe((data) => {
                 const { isLoggedIn, message } = data;
+
                 this.message = message && message;
                 this.isLoggedIn = isLoggedIn;
                 this.isSuccess = isLoggedIn;
@@ -35,6 +40,7 @@ export class AppComponent {
             .getIsSignedUpStatusListener()
             .subscribe((data) => {
                 const { isSignedUp, isSignUpFailed, message } = data;
+
                 this.message = message;
                 this.isSuccess = isSignedUp;
                 this.isError = isSignUpFailed;
