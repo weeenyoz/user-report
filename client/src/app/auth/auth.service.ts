@@ -2,17 +2,21 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-import { AuthData } from './user.model';
+import { SignUpData, LoginData } from './user.model';
 import { AuthResponse, LoginResponse, SignUpResponse } from './auth.model';
 import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+    private isSignedUpStatusListener = new Subject<SignUpResponse>();
+    private isLoggedInStatusListener = new Subject<LoginResponse>();
+
+    private tokenTimer: any;
+    private isAdmin: boolean;
+    private username: string;
+
     private isAuthenticated = false;
     private token = '';
-    private tokenTimer: any;
-    private isLoggedInStatusListener = new Subject<LoginResponse>();
-    private isSignedUpStatusListener = new Subject<SignUpResponse>();
 
     constructor(private httpClient: HttpClient, public router: Router) {}
 
@@ -22,6 +26,14 @@ export class AuthService {
 
     getIsAuth() {
         return this.isAuthenticated;
+    }
+
+    getIsAdmin() {
+        return this.isAdmin;
+    }
+
+    getUsername() {
+        return this.username;
     }
 
     getIsLoggedInStatusListener() {
@@ -39,33 +51,38 @@ export class AuthService {
             return;
         }
 
+        const { token, expiration, role } = authInfo;
+
+        role === 'admin' ? (this.isAdmin = true) : (this.isAdmin = false);
+
         const now = new Date();
-        const expiresIn = authInfo.expiration.getTime() - now.getTime();
+        const expiresIn = expiration.getTime() - now.getTime();
 
         const isNotExpired = expiresIn > 0 ? true : false;
 
         if (isNotExpired) {
-            this.token = authInfo.token;
+            this.token = token;
+
             this.isAuthenticated = true;
+
             this.setAuthTimer(expiresIn / 1000);
+
             this.isLoggedInStatusListener.next({
                 isLoggedIn: true,
+                isAdmin: this.isAdmin,
             });
         } else {
             this.logout();
         }
     }
 
-    signUp(authData: AuthData) {
+    signUp(signUpData: SignUpData) {
         this.httpClient
-            .post<{ message: string }>('api/user/signup', { ...authData })
+            .post<{ message: string }>('api/user/signup', { ...signUpData })
             .subscribe(
                 (res) => {
-                    console.log('res: ', res);
-
                     this.isSignedUpStatusListener.next({
                         isSignedUp: true,
-                        isSignUpFailed: false,
                         message: res.message,
                     });
 
@@ -76,21 +93,22 @@ export class AuthService {
 
                     this.isSignedUpStatusListener.next({
                         isSignedUp: false,
-                        isSignUpFailed: true,
                         message: error.error.message,
                     });
                 },
             );
     }
 
-    login(authData: AuthData) {
+    login(loginData: LoginData) {
         this.httpClient
-            .post<AuthResponse>('api/user/login', { ...authData })
+            .post<AuthResponse>('api/user/login', { ...loginData })
             .subscribe(
                 (res) => {
                     if (res.token) {
-                        this.token = res.token;
-                        const tokenValidDuration = res.expiresIn;
+                        const { token, expiresIn, isAdmin } = res;
+
+                        this.token = token;
+                        const tokenValidDuration = expiresIn;
 
                         this.setAuthTimer(tokenValidDuration);
 
@@ -99,35 +117,43 @@ export class AuthService {
                             now.getTime() + tokenValidDuration * 1000,
                         );
 
-                        this.saveAuthData(this.token, expDate);
+                        this.saveAuthData(this.token, expDate, isAdmin);
 
                         this.isAuthenticated = true;
 
+                        this.isAdmin = isAdmin;
+
+                        this.username = loginData.username;
+
                         this.isLoggedInStatusListener.next({
                             isLoggedIn: true,
+                            isAdmin,
                         });
 
                         this.router.navigate(['/home']);
                     }
                 },
                 (error) => {
+                    console.log('error in login: ', error);
                     this.isAuthenticated = false;
 
                     this.isLoggedInStatusListener.next({
                         isLoggedIn: false,
                         message: error.error.message,
+                        isAdmin: false,
                     });
                 },
             );
     }
 
     logout() {
-        this.token = null;
+        this.token = '';
 
         this.isAuthenticated = false;
 
         this.isLoggedInStatusListener.next({
             isLoggedIn: false,
+            isAdmin: false,
         });
 
         clearTimeout(this.tokenTimer);
@@ -136,18 +162,21 @@ export class AuthService {
         this.router.navigate(['/login']);
     }
 
-    private saveAuthData(token: string, expDate: Date) {
+    private saveAuthData(token: string, expDate: Date, isAdmin: boolean) {
         localStorage.setItem('token', token);
+        localStorage.setItem('role', isAdmin ? 'admin' : 'non-admin');
         localStorage.setItem('expiration', expDate.toISOString());
     }
 
     private clearAuthData() {
         localStorage.removeItem('token');
+        localStorage.removeItem('role');
         localStorage.removeItem('expiration');
     }
 
     private getAuthData() {
         const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
         const expiration = localStorage.getItem('expiration');
 
         if (!token || !expiration) {
@@ -155,6 +184,7 @@ export class AuthService {
         }
         return {
             token,
+            role,
             expiration: new Date(expiration),
         };
     }

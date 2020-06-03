@@ -1,0 +1,58 @@
+@import '../../theme.scss';
+
+.home {
+  margin-top: 5%;
+  padding: 0 10%;
+  height: 100vh;
+
+  .card {
+    margin: 2% 0;
+    padding: 1%;
+
+    .report-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      h5 {
+        margin-bottom: 0;
+
+        .username {
+          color: $primary;
+        }
+      }
+    }
+
+  }
+
+  .row {
+    margin: 0;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 2%;
+
+    .approve {
+      margin-right: 10px;
+    }
+
+    .edit {
+      margin-left: 10px;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .card {
+      padding: 5%;
+    }
+
+
+    .buttons {
+      margin-top: 5%
+    }
+
+  }
+}

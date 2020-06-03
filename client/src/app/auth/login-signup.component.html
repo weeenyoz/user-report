@@ -3,7 +3,7 @@
 
     <form (submit)="onSubmit(loginSignupForm)" #loginSignupForm="ngForm">
         <div class="container">
-            <div class="row username" *ngIf="title === 'Sign Up'">
+            <div class="row username">
                 <div class="col-12 form-group">
                     <label>Username</label>
                     <input
@@ -16,7 +16,8 @@
                         required
                         [ngClass]="{
                             'error-input':
-                                (usernameInput.invalid && usernameInput.touched) ||
+                                (usernameInput.invalid &&
+                                    usernameInput.touched) ||
                                 (isFormInvalid && usernameInput.untouched)
                         }"
                     />
@@ -32,7 +33,7 @@
                 </div>
             </div>
 
-            <div class="row email">
+            <div class="row email" *ngIf="!isLogin">
                 <div class="col-12 form-group">
                     <label>Email address</label>
                     <input
@@ -75,7 +76,8 @@
                         required
                         [ngClass]="{
                             'error-input':
-                                (passwordInput.invalid && passwordInput.touched) ||
+                                (passwordInput.invalid &&
+                                    passwordInput.touched) ||
                                 (isFormInvalid && passwordInput.untouched)
                         }"
                     />

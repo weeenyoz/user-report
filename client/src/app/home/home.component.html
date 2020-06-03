@@ -1,1 +1,43 @@
-<h1>Home Component</h1>
+<div class="home">
+  <h1>My Reports</h1>
+
+  <div *ngIf="reports && reports.length > 0">
+
+    <div *ngFor="let report of reports">
+
+      <div class="card container-fluid">
+        <div class="row">
+
+          <div class="col-12 report-header">
+            <h5 class="card-title">
+              <span class="username">{{report.username}}</span>, <span class="date">{{report.date | date }}</span>
+            </h5>
+            <h5 class="card-subtitle text-success" *ngIf="report.approved">Approved on
+              ({{ report.approvedDateTime | date: 'medium' }})
+            </h5>
+          </div>
+
+          <div class="col-12 report-body">
+            <p class="card-text">{{report.content}}</p>
+          </div>
+
+        </div>
+
+        <div class="row buttons">
+          <button type="button" class="approve btn btn-outline-primary" *ngIf="isAdmin" (click)="onApprove(report.id)"
+            [disabled]="report.approved">Approve</button>
+          <button class="edit btn btn-outline-success" *ngIf="isAdmin"
+            [routerLink]="['', 'reports', report.id]">Edit</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="reports && reports.length === 0">
+    <div>
+      <h4 class="notice card-subtitle mb-2 text-muted">There are no approved reports currently</h4>
+    </div>
+  </div>
+
+</div>
