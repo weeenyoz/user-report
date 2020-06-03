@@ -18,29 +18,25 @@
 
   .navbar-collapse {
     flex-grow: unset;
-    width: 27%;
-
-    @media only screen and (min-width: 1025px) {
-      width: 15%;
-    }
-
+    width: 100%;
 
     .navbar-nav {
       width: 100%;
       align-items: center;
-      justify-content: space-around;
+      justify-content: flex-end;
 
-      @media only screen and (max-width: 414px) {
+      @media only screen and (max-width: 767px) {
         align-items: flex-end;
         margin-bottom: 3%
       }
 
       .nav-item {
 
-        @media only screen and (max-width: 414px) {
+        @media only screen and (max-width: 767px) {
           margin-top: 3%;
         }
 
+        margin-left: 1%;
         font-size: 20px;
       }
 
