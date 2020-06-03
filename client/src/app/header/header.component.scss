@@ -18,7 +18,12 @@
 
   .navbar-collapse {
     flex-grow: unset;
-    width: 15%;
+    width: 27%;
+
+    @media only screen and (min-width: 1025px) {
+      width: 15%;
+    }
+
 
     .navbar-nav {
       width: 100%;
