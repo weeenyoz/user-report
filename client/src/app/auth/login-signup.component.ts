@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 
 import { AuthService } from './auth.service';
+import { LoginData, SignUpData } from './user.model';
 
 @Component({
     templateUrl: './login-signup.component.html',
@@ -12,6 +13,7 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
     title: string;
     isFormInvalid: boolean;
     isEmailInputInvalid: boolean;
+    isLogin: boolean;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -22,7 +24,13 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
         this.activatedRoute.url.subscribe((data) => {
             const url = data[0].path;
 
-            url === 'login' ? (this.title = 'Login') : (this.title = 'Sign Up');
+            if (url === 'login') {
+                this.isLogin = true;
+                this.title = 'Login';
+            } else {
+                this.isLogin = false;
+                this.title = 'Sign Up';
+            }
         });
     }
 
@@ -37,14 +45,16 @@ export class LoginSignupComponent implements OnInit, OnDestroy {
 
         const { username, email, password } = form.value;
 
-        let user = {
+        let user: LoginData | SignUpData = {
             username,
-            email,
             password,
         };
 
-        this.title === 'Login'
-            ? this.authService.login(user)
-            : this.authService.signUp(user);
+        if (this.isLogin) {
+            this.authService.login(user);
+        } else {
+            (user as SignUpData).email = email;
+            this.authService.signUp(user as SignUpData);
+        }
     }
 }

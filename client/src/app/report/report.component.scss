@@ -1,0 +1,27 @@
+.container-fluid {
+  margin-top: 5%;
+  padding: 0 10%;
+
+  .date,
+  .username,
+  .content,
+  .submit {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .buttons {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2%;
+
+    .submit {
+      margin-right: 10px;
+    }
+
+    .approve {
+      margin-left: 10px;
+    }
+  }
+}

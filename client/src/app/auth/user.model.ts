@@ -4,4 +4,5 @@ export interface User {
     password: string;
 }
 
-export interface AuthData extends User {}
+export interface SignUpData extends User {}
+export interface LoginData extends Omit<User, 'email'> {}

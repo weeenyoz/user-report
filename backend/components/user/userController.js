@@ -35,6 +35,7 @@ module.exports.signUp = async (req, res) => {
             username,
             email,
             password: hashedPw,
+            isAdmin: false,
         };
 
         users.push(newUser);
@@ -51,13 +52,13 @@ module.exports.signUp = async (req, res) => {
  * /api/user/login
  */
 module.exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     try {
-        const user = users.find((user) => user.email === email);
+        const user = users.find((user) => user.username === username);
 
         if (!user) {
-            return res.status(401).json({ message: 'Login failed' });
+            return res.status(401).json({ message: 'Invalid user' });
         }
 
         const isValid = await bcrypt.compare(password, user.password);
@@ -74,8 +75,9 @@ module.exports.login = async (req, res, next) => {
             },
         );
 
-        res.status(200).json({ token, expiresIn: 3600 });
+        res.status(200).json({ token, expiresIn: 3600, isAdmin: user.isAdmin });
     } catch (error) {
+        console.log(error);
         return res.status(401).json({ message: 'Auth failed' });
     }
 };
