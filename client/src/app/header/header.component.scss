@@ -30,6 +30,10 @@
       align-items: center;
       justify-content: space-around;
 
+      @media only screen and (max-width: 414px) {
+        align-items: flex-end;
+      }
+
       .nav-item {
         font-size: 20px;
       }
