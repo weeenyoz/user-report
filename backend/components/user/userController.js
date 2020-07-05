@@ -67,15 +67,17 @@ module.exports.login = async (req, res, next) => {
             return res.status(401).json({ message: 'Login failed' });
         }
 
+        const { email, isAdmin } = user;
+
         const token = jwt.sign(
-            { email: user.email, userId: user.id, isAdmin: user.isAdmin },
+            { email, userId: user.id, isAdmin },
             process.env.TOKEN_SECRET,
             {
                 expiresIn: '1h',
             },
         );
 
-        res.status(200).json({ token, expiresIn: 3600, isAdmin: user.isAdmin });
+        res.status(200).json({ token, expiresIn: 3600, isAdmin });
     } catch (error) {
         console.log(error);
         return res.status(401).json({ message: 'Auth failed' });

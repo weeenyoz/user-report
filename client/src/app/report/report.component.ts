@@ -87,6 +87,7 @@ export class ReportComponent implements OnInit, OnDestroy {
             } else {
                 this.title = 'New';
                 this.username = this.authService.getUsername();
+
                 this.setForm();
             }
         });
@@ -94,7 +95,11 @@ export class ReportComponent implements OnInit, OnDestroy {
         this.isSubmittedSub = this.reportService
             .getIsSubmittedListener()
             .subscribe((isSubmitted) => {
-                this.isSubmitted = isSubmitted;
+                if (isSubmitted) {
+                    this.isSubmitted = isSubmitted;
+
+                    this.reportForm.controls.content.reset('');
+                }
             });
     }
 
