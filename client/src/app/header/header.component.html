@@ -1,34 +1,51 @@
-<nav class="navbar navbar-expand-md navbar-light ">
-  <a class="navbar-brand">
-    <h3>Reports</h3>
+<nav class="navbar navbar-expand-md navbar-light">
+    <a class="navbar-brand">
+        <h3>Reports</h3>
+    </a>
 
-  </a>
+    <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+    >
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
-    aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item" [ngClass]="{ 'sign-up': !isLoggedIn }">
+                <a routerLink="/signup" *ngIf="!isLoggedIn">Sign Up</a>
+                <button
+                    class="btn btn-outline-success"
+                    routerLink="reports/new"
+                    *ngIf="isLoggedIn"
+                >
+                    New Report
+                </button>
+            </li>
 
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
+            <li class="nav-item">
+                <button
+                    class="btn btn-primary"
+                    routerLink="/login"
+                    *ngIf="!isLoggedIn"
+                >
+                    Login
+                </button>
 
-      <li class="nav-item sign-up" *ngIf="!isLoggedIn">
-        <a routerLink="/signup">Sign Up</a>
-      </li>
-
-      <li class="nav-item" *ngIf="!isLoggedIn">
-        <button class="btn btn-primary" routerLink="/login">Login</button>
-      </li>
-
-      <li class="nav-item" *ngIf="isLoggedIn">
-        <button class="btn btn-outline-success" routerLink="reports/new">New Report</button>
-      </li>
-
-      <li class="nav-item" *ngIf="isLoggedIn">
-        <button class="btn btn-primary" routerLink="/logout" (click)="logout()">Logout</button>
-      </li>
-
-    </ul>
-  </div>
-
+                <button
+                    class="btn btn-primary"
+                    routerLink="/logout"
+                    (click)="logout()"
+                    *ngIf="isLoggedIn"
+                >
+                    Logout
+                </button>
+            </li>
+        </ul>
+    </div>
 </nav>
