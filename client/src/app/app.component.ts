@@ -1,4 +1,4 @@
-import { Component, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from './auth/auth.service';
@@ -11,15 +11,16 @@ import { ReportService } from './report/report.service';
 })
 export class AppComponent {
     title = 'client';
-    isSubmitted: boolean;
+
     isLoggedInListenerSubs: Subscription;
     isSignedUpListenerSubs: Subscription;
     isSubmittedSub: Subscription;
 
-    @Output('isLoggedIn') isLoggedIn: boolean;
-    @Output('isSuccess') isSuccess: boolean;
-    @Output('isError') isError: boolean;
-    @Output('message') message: string;
+    isSubmitted: boolean;
+    isLoggedIn: boolean;
+    isSuccess: boolean;
+    isError: boolean;
+    message: string;
 
     constructor(
         private authService: AuthService,
